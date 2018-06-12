@@ -1,48 +1,86 @@
 import numpy as np
 import matplotlib.pyplot as plot
 import pandas as pd
-import seaborn as sb
 from sklearn.cluster import KMeans
-from sklearn.metrics import pairwise_distances_argmin_min
 
 from mpl_toolkits.mplot3d import Axes3D
 plot.rcParams['figure.figsize'] = (16, 9)
 plot.style.use('ggplot')
 
 # Leer Dataset
-dataset = pd.read_csv('DatasetSGE_ValoresCorrectos.csv')
+dataset = pd.read_csv('DatasetFinal.csv')
 
-X = np.array(dataset[["05Adultos","06Dias_Reserva","14Edad_Actual_TITULAR"]])
-print(X.shape)
+X = np.array(dataset[["26Total_Euros_Tecnicas_Complentarias_TITULAR","11Reserva_DiasAnticipacion","14Edad_Actual_TITULAR"]])
 
-# Nc = range(1, 20)
-# kmeans = [KMeans(n_clusters=i) for i in Nc]
-# score = [kmeans[i].fit(X).score(X) for i in range(len(kmeans))]
-# plot.plot(Nc,score)
-# plot.xlabel('Number of Clusters')
-# plot.ylabel('Score')
-# plot.title('Elbow Curve')
-# plot.show()
+# Encontrar el numero optimo de clusters
+score = []
+for i in range (1,16):
+    kmeans = KMeans(n_clusters=i, init='k-means++', random_state= 0)
+    kmeans.fit(X)
+    score.append(kmeans.inertia_)
+plot.plot(range(1,16),score)
+plot.title('Metodo de arco')
+plot.xlabel('Numero de clusters')
+plot.ylabel('wcss')
+plot.savefig('Elbow.png')
+plot.show()
 
-kmeans = KMeans(n_clusters=4).fit(X)
+
+kmeans = KMeans(n_clusters=3, init='k-means++', random_state= 0).fit(X)
+# kmeans = KMeans(n_clusters=4).fit(X)
+
 centroids = kmeans.cluster_centers_
 print(centroids)
 
 # Predicting the clusters
-labels = kmeans.predict(X)
+labels = kmeans.labels_
+ArrayLabels = []
+
+a = 0
+b = 0
+c = 0
+d = 0
+
+ArrayLabels = labels
+for item in ArrayLabels:
+    if item == 0:
+        a = a + 1
+
+    if item == 1:
+        b = b + 1
+
+    if item == 2:
+        c = c + 1
+
+    # if item == 3:
+    #     d = d + 1
+
+
+percentage_A = a/len(ArrayLabels)
+print(a, percentage_A)
+percentage_B = b/len(ArrayLabels)
+print(b, percentage_B)
+percentage_C = c/len(ArrayLabels)
+print(c, percentage_C)
+# percentage_D = d/len(ArrayLabels)
+# print(d, percentage_D)
+
+
 # Getting the cluster centers
-C = kmeans.cluster_centers_
-colores = ['red', 'green', 'blue', 'cyan']
+
+colores = ['red', 'green', 'blue']
 asignar = []
 for row in labels:
     asignar.append(colores[row])
 
 fig = plot.figure()
 ax = Axes3D(fig)
-ax.scatter(X[:, 0], X[:, 1], X[:, 2], c=asignar, s=5)
-ax.scatter(C[:, 0], C[:, 1], C[:, 2], marker='*', c=colores, s=1000)
-
-
+ax.scatter(X[:, 0], X[:, 1], X[:, 2], c=asignar, s=1)
+ax.scatter(centroids[:, 0], centroids[:, 1], centroids[:, 2], marker='*', c=colores, s=1000)
+plot.xlabel('Gasto')
+plot.ylabel('Dias')
+plot.xlabel('edad')
+plot.savefig('Res.png')
 plot.show()
 
 ####Codigo que funciona 1
