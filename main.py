@@ -55,7 +55,6 @@ for item in ArrayLabels:
     # if item == 3:
     #     d = d + 1
 
-
 percentage_A = a/len(ArrayLabels)
 print(a, percentage_A)
 percentage_B = b/len(ArrayLabels)
