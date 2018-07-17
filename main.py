@@ -8,9 +8,10 @@ plot.rcParams['figure.figsize'] = (16, 9)
 plot.style.use('ggplot')
 
 # Leer Dataset
-dataset = pd.read_csv('DatasetFinal.csv')
+dataset = pd.read_csv('DatasetFinal_Hombre.csv')
 
-X = np.array(dataset[["26Total_Euros_Tecnicas_Complentarias_TITULAR","11Reserva_DiasAnticipacion","14Edad_Actual_TITULAR"]])
+datasetH = dataset.loc[dataset['24Sexo_TITULAR'] == 'MUJER']
+X = np.array(datasetH[["14Edad_Actual_TITULAR","52Mes_Reserva","27Total_Reservas_TITULAR"]])
 
 # Encontrar el numero optimo de clusters
 score = []
@@ -74,11 +75,11 @@ for row in labels:
 
 fig = plot.figure()
 ax = Axes3D(fig)
-ax.scatter(X[:, 0], X[:, 1], X[:, 2], c=asignar, s=1)
+ax.scatter(X[:, 0], X[:, 1], X[:, 2], c=asignar, s=250)
 ax.scatter(centroids[:, 0], centroids[:, 1], centroids[:, 2], marker='*', c=colores, s=1000)
-plot.xlabel('Gasto')
-plot.ylabel('Dias')
-plot.xlabel('edad')
+# plot.xlabel('Gasto')
+# plot.ylabel('Dias')
+# plot.xlabel('edad')
 plot.savefig('Res.png')
 plot.show()
 
